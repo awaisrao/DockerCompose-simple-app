@@ -1,27 +1,23 @@
 import os
 from flask import Flask,redirect, request, render_template, request, url_for
-from flaskext.mysql import MySQL      # For newer versions of flask-mysql 
-# from flask.ext.mysql import MySQL   # For older versions of flask-mysql
+import pymysql
+
+db = pymysql.connect(host='mysql1',user='root',password="",port=3306)
+cursor = db.cursor()
+cursor.execute("CREATE DATABASE IF NOT EXISTS student_db")
+cursor.execute("USE student_db")
+cursor.execute("CREATE TABLE IF NOT EXISTS students (name VARCHAR(20),class VARCHAR(20),age VARCHAR(10),address VARCHAR(100))")
+
 app = Flask(__name__)
 
-mysql = MySQL()
+#mysql = MySQL()
+#api=Api(app)
 
-mysql_database_host = 'MYSQL_DATABASE_HOST' in os.environ and os.environ['MYSQL_DATABASE_HOST'] or  'localhost'
 
-# MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'Root@123'
-app.config['MYSQL_DATABASE_DB'] = 'student_db'
-app.config['MYSQL_DATABASE_HOST'] = mysql_database_host
-mysql.init_app(app)
 
-conn = mysql.connect()
 
-cursor = conn.cursor()
+cursor = db.cursor()
 
-#@app.route("/")
-#def main():
-#    return "Welcome!"
 
 
 @app.route("/",methods=['GET','POST'])
